@@ -16,7 +16,8 @@ public class LettersTreasureHuntTest {
 
     @Test
     public void emptyMap() {
-        Prize prize = hunt.x("");
+        Map map = new WorldMap(new CharGrid(""));
+        Prize prize = hunt.x(map);
         MatcherAssert.assertThat(
             "Letters are not empty",
             "",
@@ -26,25 +27,6 @@ public class LettersTreasureHuntTest {
             "Path is not empty",
             "",
             new IsEqual<>(prize.path())
-        );
-    }
-
-    @Test
-    public void simpleMap() {
-        String map = "  @---A---+\n" +
-                     "          |\n" +
-                     "  x-B-+   C\n" +
-                     "      |   |\n" +
-                     "      +---+s\n";
-        Prize prize = hunt.x(map);
-        MatcherAssert.assertThat(
-            "Letters don't match",
-            prize.letters(),
-            new IsEqual<>("ACB"));
-        MatcherAssert.assertThat(
-            "Path doesn't match",
-            prize.path(),
-            new IsEqual<>("@---A---+|C|+---+|+-B-x")
         );
     }
 
