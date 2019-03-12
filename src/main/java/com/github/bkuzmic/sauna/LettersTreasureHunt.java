@@ -11,12 +11,26 @@ public class LettersTreasureHunt implements TreasureHunt {
     }
 
     @Override
-    public Prize x(Map map) {
+    public Prize x(MapWithX map) {
         if (map.isEmpty()) {
             return new Prize("", "");
         }
-        Position start = map.findCharacter('@');
-        Position end = map.findCharacter('x');
+        Spot start = map.findCharacter('@');
+        Spot current = new Spot(
+            new Position(start.position().getX(), start.position().getY(), Direction.RIGHT, Direction.RIGHT),
+            start.isMovable(),
+            start.character()
+        );
+        Spot end = map.findCharacter('x');
+        path.append(start.character());
+        while (!current.position().equals(end.position())) {
+            current = map.move(current.position());
+            path.append(current.character());
+            if (Character.isLetter(current.character()) &&
+                Character.isUpperCase(current.character())) {
+                letters.append(current.character());
+            }
+        }
         return new Prize(letters.toString(), path.toString());
     }
 }

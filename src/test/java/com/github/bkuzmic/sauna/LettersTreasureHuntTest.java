@@ -16,17 +16,39 @@ public class LettersTreasureHuntTest {
 
     @Test
     public void emptyMap() {
-        Map map = new WorldMap(new CharGrid(""));
+        MapWithX map = new TreasureMap(new CharGrid(""));
         Prize prize = hunt.x(map);
         MatcherAssert.assertThat(
             "Letters are not empty",
-            "",
-            new IsEqual<>(prize.letters())
+            prize.letters(),
+            new IsEqual<>("")
         );
         MatcherAssert.assertThat(
             "Path is not empty",
-            "",
-            new IsEqual<>(prize.path())
+            prize.path(),
+            new IsEqual<>("")
+        );
+    }
+
+    @Test
+    public void simpleMap() {
+        String map = "  @---A---+\n" +
+                     "          |\n" +
+                     "  x-B-+   C\n" +
+                     "      |   |\n" +
+                     "      +---+\n";
+
+        Grid grid = new CharGrid(map);
+        Prize prize = hunt.x(new TreasureMap(grid));
+        MatcherAssert.assertThat(
+            "Letters don't match",
+            prize.letters(),
+            new IsEqual<>("ACB")
+        );
+        MatcherAssert.assertThat(
+            "Path doesn't match",
+            prize.path(),
+            new IsEqual<>("@---A---+|C|+---+|+-B-x")
         );
     }
 

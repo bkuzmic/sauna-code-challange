@@ -2,6 +2,6 @@ package com.github.bkuzmic.sauna;
 
 public interface TreasureHunt {
 
-    Prize x(Map map);
+    Prize x(MapWithX map);
 
 }
