@@ -6,10 +6,12 @@ import java.util.Map;
 
 public class TreasureMap implements MapWithX {
 
+    private final static char BLANK = '\0';
+
     private final Grid grid;
     private Map<Direction, Direction> next;
     private Map<Direction, Direction> impossibleDirections;
-    private Map<Direction, Integer[]> movements;
+    private Map<Direction, Position> movements;
 
     public TreasureMap(Grid grid) {
         this.grid = grid;
@@ -24,10 +26,10 @@ public class TreasureMap implements MapWithX {
         this.impossibleDirections.put(Direction.DOWN, Direction.UP);
         this.impossibleDirections.put(Direction.UP, Direction.DOWN);
         this.movements = new HashMap<>();
-        this.movements.put(Direction.RIGHT, new Integer[]{0, 1});
-        this.movements.put(Direction.DOWN, new Integer[]{1, 0});
-        this.movements.put(Direction.LEFT, new Integer[]{0, -1});
-        this.movements.put(Direction.UP, new Integer[]{-1, 0});
+        this.movements.put(Direction.RIGHT, new Position(0, 1));
+        this.movements.put(Direction.DOWN, new Position(1, 0));
+        this.movements.put(Direction.LEFT, new Position(0, -1));
+        this.movements.put(Direction.UP, new Position(-1, 0));
     }
 
     @Override
@@ -36,12 +38,18 @@ public class TreasureMap implements MapWithX {
     }
 
     @Override
-    public Spot findCharacter(char character) {
+    public Spot find(char character) {
         for (int x = 0; x < this.grid.totalRows(); x++) {
             for (int y = 0; y < this.grid.totalCols(); y++) {
                 if (this.grid.pos(x, y) == character) {
                     return new Spot(
-                        new Position(x, y, Direction.RIGHT, Direction.RIGHT), true, character
+                        new Position(x, y),
+                        new Transition(
+                            Direction.RIGHT,
+                            Direction.RIGHT
+                        ),
+                        true,
+                        character
                     );
                 }
             }
@@ -52,51 +60,49 @@ public class TreasureMap implements MapWithX {
     }
 
     @Override
-    public Spot move(Position to) {
-        if (to.getFrom().equals(impossibleDirections.get(to.getCurrent()))) {
+    public Spot move(Position pos, Transition transition) {
+        if (transition.getFrom().equals(
+            impossibleDirections.get(transition.getCurrent())
+        )) {
             return move(
-                new Position(
-                    to.getX(),
-                    to.getY(),
-                    next.get(to.getCurrent()),
-                    to.getFrom()
+                pos,
+                new Transition(
+                    next.get(transition.getCurrent()),
+                    transition.getFrom()
                 )
             );
         }
-        Spot spot = canMove(to);
+        Spot spot = canMove(pos, transition);
         if (!spot.isMovable()) {
             return move(
-                new Position(
-                    to.getX(),
-                    to.getY(),
-                    next.get(to.getCurrent()),
-                    to.getFrom()
+                pos,
+                new Transition(
+                    next.get(transition.getCurrent()),
+                    transition.getFrom()
                 )
             );
         }
-        spot.position().setFrom(to.getCurrent());
+        spot.transition().setFrom(transition.getCurrent());
         return spot;
     }
 
 
-    private Spot canMove(Position to) {
-        int x = to.getX() + this.movements.get(to.getCurrent())[0];
-        int y = to.getY() + this.movements.get(to.getCurrent())[1];
-        if (x < this.grid.totalRows() && y < this.grid.totalCols()) {
-            if (this.grid.pos(x, y) == '\0') {
-                return new Spot(
-                    new Position(x, y, to.getCurrent(), to.getFrom()), false, '\0'
-                );
-            } else {
-                return new Spot(
-                    new Position(x, y, to.getCurrent(), to.getFrom()), true, this.grid.pos(x, y)
-                );
-            }
-        } else {
-            return new Spot(
-                new Position(x, y, to.getCurrent(), to.getFrom()), false, '\0'
-            );
+    private Spot canMove(Position position, Transition transition) {
+        int x = position.getX() + this.movements.get(transition.getCurrent()).getX();
+        int y = position.getY() + this.movements.get(transition.getCurrent()).getY();
+        char character = BLANK;
+        if (x>=0 && x < this.grid.totalRows() &&
+            y>=0 && y < this.grid.totalCols()) {
+            character = this.grid.pos(x, y);
         }
+        return new Spot(
+            new Position(x, y),
+            new Transition(
+                transition.getCurrent(), transition.getFrom()
+            ),
+            character != BLANK,
+            character
+        );
     }
 
 

@@ -4,7 +4,7 @@ public interface MapWithX {
 
     boolean isEmpty();
 
-    Spot findCharacter(char character);
+    Spot find(char character);
 
-    Spot move(Position to);
+    Spot move(Position position, Transition transition);
 }

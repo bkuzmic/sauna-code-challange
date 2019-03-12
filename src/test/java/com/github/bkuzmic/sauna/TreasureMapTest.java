@@ -23,18 +23,25 @@ public class TreasureMapTest {
 
     @Test
     public void moveToRight() {
-        Spot spot = treasureMap.move(new Position(0, 3, Direction.RIGHT, Direction.RIGHT));
+        Spot spot = treasureMap.move(
+            new Position(0, 3),
+            new Transition(Direction.RIGHT, Direction.RIGHT)
+        );
 
-        MatcherAssert.assertThat(spot.position().getX(), new IsEqual<>(0));
-        MatcherAssert.assertThat(spot.position().getY(), new IsEqual<>(4));
+        MatcherAssert.assertThat(
+            spot.position(),
+            new IsEqual<>(new Position(0, 4))
+        );
     }
 
     @Test
     public void findStartCharacter() {
-        Spot start = treasureMap.findCharacter('@');
+        Spot start = treasureMap.find('@');
 
-        MatcherAssert.assertThat(start.position().getX(), new IsEqual<>(0));
-        MatcherAssert.assertThat(start.position().getY(), new IsEqual<>(2));
+        MatcherAssert.assertThat(
+            start.position(),
+            new IsEqual<>(new Position(0, 2))
+        );
     }
 
 }
