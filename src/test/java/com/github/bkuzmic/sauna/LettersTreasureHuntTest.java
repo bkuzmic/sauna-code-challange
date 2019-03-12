@@ -16,16 +16,16 @@ public class LettersTreasureHuntTest {
 
     @Test
     public void emptyMap() {
-        MapWithX map = new TreasureMap(new CharGrid(""));
+        XMap map = new TreasureMap(new CharGrid(""));
         Prize prize = hunt.findX(map);
         MatcherAssert.assertThat(
             "Letters are not empty",
-            prize.letters(),
+            prize.printLetters(),
             new IsEqual<>("")
         );
         MatcherAssert.assertThat(
             "Path is not empty",
-            prize.path(),
+            prize.printPath(),
             new IsEqual<>("")
         );
     }
@@ -42,12 +42,12 @@ public class LettersTreasureHuntTest {
         Prize prize = hunt.findX(new TreasureMap(grid));
         MatcherAssert.assertThat(
             "Letters don't match",
-            prize.letters(),
+            prize.printLetters(),
             new IsEqual<>("ACB")
         );
         MatcherAssert.assertThat(
             "Path doesn't match",
-            prize.path(),
+            prize.printPath(),
             new IsEqual<>("@---A---+|C|+---+|+-B-x")
         );
     }
@@ -65,12 +65,12 @@ public class LettersTreasureHuntTest {
         Prize prize = hunt.findX(new TreasureMap(grid));
         MatcherAssert.assertThat(
             "Letters don't match",
-            prize.letters(),
+            prize.printLetters(),
             new IsEqual<>("ABCD")
         );
         MatcherAssert.assertThat(
             "Path doesn't match",
-            prize.path(),
+            prize.printPath(),
             new IsEqual<>("@|A+---B--+|+----C|-||+---D--+|x")
         );
     }
@@ -89,14 +89,14 @@ public class LettersTreasureHuntTest {
 
         Grid grid = new CharGrid(map);
         Prize prize = hunt.findX(new TreasureMap(grid));
-//        MatcherAssert.assertThat(
-//            "Letters don't match",
-//            prize.letters(),
-//            new IsEqual<>("BEEFCAKE")
-//        );
+        MatcherAssert.assertThat(
+            "Letters don't match",
+            prize.printLetters(),
+            new IsEqual<>("BEEFCAKE")
+        );
         MatcherAssert.assertThat(
             "Path doesn't match",
-            prize.path(),
+            prize.printPath(),
             new IsEqual<>("@---+B||E--+|E|+--F--+|C|||A--|-----K|||+--E--Ex")
         );
     }

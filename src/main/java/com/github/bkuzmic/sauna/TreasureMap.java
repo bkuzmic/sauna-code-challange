@@ -4,7 +4,7 @@ import com.github.bkuzmic.sauna.exceptions.CharacterNotFoundException;
 import java.util.HashMap;
 import java.util.Map;
 
-public class TreasureMap implements MapWithX {
+public class TreasureMap implements XMap {
 
     private final static char BLANK = '\0';
 
@@ -60,36 +60,35 @@ public class TreasureMap implements MapWithX {
     }
 
     @Override
-    public Spot move(Position pos, Transition transition) {
-        if (transition.getFrom().equals(
-            impossibleDirections.get(transition.getCurrent())
+    public Spot move(Position position, Transition transition) {
+        if (transition.from().equals(
+            impossibleDirections.get(transition.current())
         )) {
             return move(
-                pos,
+                position,
                 new Transition(
-                    next.get(transition.getCurrent()),
-                    transition.getFrom()
+                    next.get(transition.current()),
+                    transition.from()
                 )
             );
         }
-        Spot spot = canMove(pos, transition);
+        Spot spot = makeMove(position, transition);
         if (!spot.isMovable()) {
             return move(
-                pos,
+                position,
                 new Transition(
-                    next.get(transition.getCurrent()),
-                    transition.getFrom()
+                    next.get(transition.current()),
+                    transition.from()
                 )
             );
         }
-        spot.transition().setFrom(transition.getCurrent());
         return spot;
     }
 
 
-    private Spot canMove(Position position, Transition transition) {
-        int x = position.getX() + this.movements.get(transition.getCurrent()).getX();
-        int y = position.getY() + this.movements.get(transition.getCurrent()).getY();
+    private Spot makeMove(Position position, Transition transition) {
+        int x = position.getX() + this.movements.get(transition.current()).getX();
+        int y = position.getY() + this.movements.get(transition.current()).getY();
         char character = BLANK;
         if (x>=0 && x < this.grid.totalRows() &&
             y>=0 && y < this.grid.totalCols()) {
@@ -98,7 +97,7 @@ public class TreasureMap implements MapWithX {
         return new Spot(
             new Position(x, y),
             new Transition(
-                transition.getCurrent(), transition.getFrom()
+                transition.current(), transition.current()
             ),
             character != BLANK,
             character

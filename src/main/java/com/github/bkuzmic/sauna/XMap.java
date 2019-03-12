@@ -1,6 +1,6 @@
 package com.github.bkuzmic.sauna;
 
-public interface MapWithX {
+public interface XMap {
 
     boolean isEmpty();
 

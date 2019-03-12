@@ -7,7 +7,7 @@ import org.junit.Test;
 
 public class TreasureMapTest {
 
-    private MapWithX treasureMap;
+    private XMap treasureMap;
 
     @Before
     public void setUp() {

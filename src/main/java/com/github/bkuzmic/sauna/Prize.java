@@ -1,21 +1,40 @@
 package com.github.bkuzmic.sauna;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class Prize {
 
-    private final String letters;
-    private final String path;
+    private StringBuffer path;
+    private List<Letter> letters;
 
-    public Prize(String letters, String path) {
-        this.letters = letters;
-        this.path = path;
+    public Prize() {
+        this.path = new StringBuffer();
+        this.letters = new ArrayList<>();
     }
 
-    public String letters() {
-        return this.letters;
+    public void letter(char character, Position position) {
+        if (Character.isLetter(character) && Character.isUpperCase(character)) {
+            Letter letter = new Letter(character, position);
+            if (this.letters.indexOf(letter) == -1) {
+                this.letters.add(letter);
+            }
+        }
     }
 
-    public String path() {
-        return this.path;
+    public void path(char character) {
+        this.path.append(character);
+    }
+
+    public String printPath() {
+        return this.path.toString();
+    }
+
+    public String printLetters() {
+        return this.letters.stream().map(Letter::toString).collect(
+            Collectors.joining("")
+        );
     }
 
 }

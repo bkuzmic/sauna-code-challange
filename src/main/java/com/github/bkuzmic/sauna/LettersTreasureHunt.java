@@ -2,31 +2,26 @@ package com.github.bkuzmic.sauna;
 
 public class LettersTreasureHunt implements TreasureHunt {
 
-    private StringBuffer path;
-    private StringBuffer letters;
+    private Prize prize;
 
     public LettersTreasureHunt() {
-        this.path = new StringBuffer();
-        this.letters = new StringBuffer();
+        this.prize = new Prize();
     }
 
     @Override
-    public Prize findX(MapWithX map) {
+    public Prize findX(XMap map) {
         if (map.isEmpty()) {
-            return new Prize("", "");
+            return this.prize;
         }
         Spot start = map.find('@');
-        path.append(start.character());
+        this.prize.path(start.character());
         Spot end = map.find('x');
         Spot current = start;
         while (!current.position().equals(end.position())) {
             current = map.move(current.position(), current.transition());
-            path.append(current.character());
-            if (Character.isLetter(current.character()) &&
-                Character.isUpperCase(current.character())) {
-                letters.append(current.character());
-            }
+            this.prize.path(current.character());
+            this.prize.letter(current.character(), current.position());
         }
-        return new Prize(letters.toString(), path.toString());
+        return this.prize;
     }
 }
