@@ -17,7 +17,7 @@ public class Prize {
     public void letter(char character, Position position) {
         if (Character.isLetter(character) && Character.isUpperCase(character)) {
             Letter letter = new Letter(character, position);
-            if (this.letters.indexOf(letter) == -1) {
+            if (this.letters.lastIndexOf(letter) == -1) {
                 this.letters.add(letter);
             }
         }
